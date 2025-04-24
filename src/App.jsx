@@ -1,10 +1,11 @@
 import './App.css'
+import Navbar from './components/shared/Navbar'
 
 function App() {
 
   return (
     <>
-    <h1 className='font-bold text-red-500 w-full '>Lets build gmail clone</h1>
+    <Navbar/>
     </>
   )
 }
