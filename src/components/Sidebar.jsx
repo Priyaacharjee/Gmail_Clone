@@ -47,7 +47,9 @@ const Sidebar = () => {
                 {
                     sidebarItems.map((item, index) => {
                         return (
-                            <div className='flex items-center gap-4 pl-6 py-1 rounded-r-full hover:cursor-pointer my-2 hover:bg-gray-200'>
+                            <div 
+                                key={index} 
+                                className='flex items-center gap-4 pl-6 py-1 rounded-r-full hover:cursor-pointer my-2 hover:bg-gray-200'>
                                 {item.icons}
                                 <p>{item.text}</p>
                             </div>
