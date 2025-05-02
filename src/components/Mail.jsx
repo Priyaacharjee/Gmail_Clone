@@ -13,24 +13,30 @@ import {
 import { BiArchiveIn } from "react-icons/bi";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { deleteDoc,doc } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { motion } from 'framer-motion';
 
 const Mail = () => {
   const navigate = useNavigate();
-  const {selectedEmail}=useSelector(store=>store.appSlice);
-  const params=useParams();
+  const { selectedEmail } = useSelector(store => store.appSlice);
+  const params = useParams();
 
-  const deleteByMailId=async(id)=>{
+  const deleteByMailId = async (id) => {
     try {
-      await deleteDoc(doc(db,"emails",id));
+      await deleteDoc(doc(db, "emails", id));
       navigate("/");
     } catch (error) {
-      console.log(error);    
+      console.log(error);
     }
   }
   return (
-    <div className='flex-1 bg-white rounded-xl mx-5'>
+
+    <motion.div
+      initial={{ opacity: 0, y:20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className='flex-1 bg-white rounded-xl mx-5'>
       <div className='flex items-center justify-between px-4'>
         <div className='flex items-center gap-2 text-gray-700 py-2'>
           <div onClick={() => navigate("/")} className='p-2 rounded-full hover:bg-gray-100 cursor-pointer'>
@@ -42,8 +48,8 @@ const Mail = () => {
           <div className='p-2 rounded-full hover:bg-gray-100 cursor-pointer'>
             <MdOutlineReport size={"20px"} />
           </div>
-          <div onClick={()=>deleteByMailId(params.id)} className='p-2 rounded-full hover:bg-gray-100 cursor-pointer'>
-            <MdDeleteOutline  size={"20px"} />
+          <div onClick={() => deleteByMailId(params.id)} className='p-2 rounded-full hover:bg-gray-100 cursor-pointer'>
+            <MdDeleteOutline size={"20px"} />
           </div>
           <div className='p-2 rounded-full hover:bg-gray-100 cursor-pointer'>
             <MdOutlineMarkEmailUnread size={"20px"} />
@@ -77,7 +83,7 @@ const Mail = () => {
             <span className='text-sm bg-gray-200 rounded-md px-2'>inbox</span>
           </div>
           <div className='flex-none text-gray-400 my-5 text-sm'>
-            <p>{new Date(selectedEmail?.createdAt?.seconds*1000).toUTCString()}</p>
+            <p>{new Date(selectedEmail?.createdAt?.seconds * 1000).toUTCString()}</p>
           </div>
         </div>
         <div className='text-gray-500 text-sm'>
@@ -90,7 +96,7 @@ const Mail = () => {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   )
 }
 

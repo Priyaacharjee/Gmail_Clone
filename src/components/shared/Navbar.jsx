@@ -3,20 +3,36 @@ import { CiCircleQuestion, CiSettings } from 'react-icons/ci';
 import { IoIosSearch } from 'react-icons/io';
 import { PiDotsNineBold } from 'react-icons/pi';
 import { RxHamburgerMenu } from "react-icons/rx";
-import { useDispatch } from 'react-redux';
-import { setSearchText } from '../redux/appSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchText, setUser } from '../redux/appSlice';
+import { AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 
 const Navbar = () => {
-    const [input,setInput]=useState();
-    const dispatch=useDispatch();
-    useEffect(()=>{
+    const [input, setInput] = useState();
+    const [toggle, setToggle] = useState(false);
+    const {user}=useSelector(store=>store.appSlice)
+    const dispatch = useDispatch();
+
+    const signOutHandler=()=>{
+        signOut(auth).then(()=>{
+            dispatch(setUser(null));
+        }).catch((err)=>{
+            console.log(err);
+            
+        })
+    }
+
+    useEffect(() => {
         dispatch(setSearchText(input))
-    },[input])
+    }, [input])
 
     return (
         <div className='flex items-center justify-between mx-3 h-16'>
-            <div className='flex items-center gap-10 w-full'>
+            <div className='flex items-center gap-20 w-full'>
                 <div className='flex items-center gap-2'>
                     <div className='p-3 rounded-full hover:bg-gray-100 cursor-pointer'>
                         <RxHamburgerMenu size={"20px"} />
@@ -30,7 +46,7 @@ const Navbar = () => {
                         <input
                             type="text"
                             value={input}
-                            onChange={(e)=>setInput(e.target.value)}
+                            onChange={(e) => setInput(e.target.value)}
                             placeholder='Search Mail'
                             className='rounded-full w-full bg-transparent outline-none px-1' />
                     </div>
@@ -49,10 +65,25 @@ const Navbar = () => {
                         </div>
                         <div className='cursor-pointer'>
                             <img
-                                src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                                onClick={() => setToggle(!toggle)}
+                                src={user?.photoURL}
                                 alt="user avatar"
                                 className="w-10 h-10 rounded-full object-cover"
                             />
+                            <AnimatePresence>
+                                {
+                                    toggle && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            transition={{ duration: 0.1 }}
+                                            className='absolute right-2 z-20 shadow-lg bg-white rounded-md'>
+                                            <p onClick={signOutHandler} className='p-2 underline'>LogOut</p>
+                                        </motion.div>
+                                    )
+                                }
+                            </AnimatePresence>
 
                         </div>
                     </div>
